@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Book;
 use App\Models\Loan;
 use Illuminate\Http\Request;
 
 class CatalogController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::all();
-        return view('catalog.index', compact('books'));
+        $categories = Category::all();
+        $query = Book::query();
+
+        if ($request->has('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        $books = $query->get();
+
+        return view('catalog.index', compact('books', 'categories'));
     }
 
     public function requestForm(Book $book)

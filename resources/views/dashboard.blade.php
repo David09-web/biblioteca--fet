@@ -3,64 +3,99 @@
 @section('title', 'Panel de Control - Biblioteca')
 
 @section('content')
-<div class="dashboard-header" style="background: white; padding: 1rem 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
-    <h2 style="color: var(--primary-color); font-weight: 700; margin: 0;">📚 Biblioteca</h2>
-    <div style="display: flex; align-items: center; gap: 1rem;">
-        <span style="font-weight: 500;">Hola, {{ auth()->user()->name }} ({{ ucfirst(auth()->user()->role) }})</span>
+<nav class="navbar">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <i class="fa-solid fa-book-bookmark" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+        <h2 style="margin: 0; color: var(--primary-color);">Biblioteca <span style="color: var(--text-main); font-weight: 300;">Admin</span></h2>
+    </div>
+    <div style="display: flex; align-items: center; gap: 1.5rem;">
+        <div style="text-align: right; line-height: 1;">
+            <div style="font-weight: 700; font-size: 0.9rem;">{{ auth()->user()->name }}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.2rem;">{{ auth()->user()->role }}</div>
+        </div>
         <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
             @csrf
-            <button type="submit" style="background: transparent; border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; color: var(--text-main); font-weight: 500; transition: all 0.2s;">
-                Cerrar Sesión
+            <button type="submit" class="btn-premium" style="background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-main); padding: 0.5rem 1rem; font-size: 0.85rem; gap: 0.5rem;">
+                <i class="fa-solid fa-right-from-bracket"></i> Salir
             </button>
         </form>
     </div>
-</div>
+</nav>
 
-<div style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem; animation: fadeIn 0.4s ease-out;">
+<div class="container animate-fade">
+    <div style="margin-bottom: 3rem;">
+        <h1 style="margin-bottom: 0.5rem;">Panel de Control</h1>
+        <p style="color: var(--text-muted);">Bienvenido de nuevo. Aquí tienes un resumen del estado actual de la biblioteca.</p>
+    </div>
 
     @php
-        $overdueLoans = \App\Models\Loan::where('status', 'active')->where('due_date', '<', now());
-        if(auth()->user()->role !== 'admin') {
-            $overdueLoans->where('user_id', auth()->id());
-        }
-        $overdueCount = $overdueLoans->count();
+        $overdueCount = \App\Models\Loan::where('status', 'active')->where('due_date', '<', now())->count();
+        $totalBooks = \App\Models\Book::sum('total_copies');
+        $activeLoans = \App\Models\Loan::where('status', 'active')->count();
+        $totalUsers = \App\Models\User::count();
     @endphp
 
-    @if($overdueCount > 0)
-    <div style="background-color: #FEF2F2; border-left: 4px solid var(--error-color); padding: 1rem 1.5rem; border-radius: 4px; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between;">
-        <div>
-            <h3 style="color: #9B1C1C; margin: 0 0 0.25rem 0; font-size: 1rem;">⚠️ Aviso Importante</h3>
-            <p style="color: #7F1D1D; margin: 0; font-size: 0.9rem;">
-                @if(auth()->user()->role === 'admin')
-                    Existen <strong>{{ $overdueCount }}</strong> préstamos vencidos en el sistema que requieren atención.
-                @else
-                    Tienes <strong>{{ $overdueCount }}</strong> libro(s) con fecha de devolución vencida. Por favor, devuélvelos lo antes posible en la biblioteca.
-                @endif
-            </p>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: var(--primary-light); color: var(--primary-color);"><i class="fa-solid fa-book"></i></div>
+            <div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Total Libros</div>
+                <div style="font-size: 1.5rem; font-weight: 800;">{{ $totalBooks }}</div>
+            </div>
         </div>
-        <a href="{{ route('loans.index') }}" style="color: var(--error-color); font-weight: 600; font-size: 0.9rem; text-decoration: underline;">Revisar Préstamos</a>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #e0e7ff; color: #4338ca;"><i class="fa-solid fa-users"></i></div>
+            <div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Usuarios</div>
+                <div style="font-size: 1.5rem; font-weight: 800;">{{ $totalUsers }}</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #dcfce7; color: #15803d;"><i class="fa-solid fa-hand-holding-heart"></i></div>
+            <div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Préstamos Activos</div>
+                <div style="font-size: 1.5rem; font-weight: 800;">{{ $activeLoans }}</div>
+            </div>
+        </div>
+        <div class="stat-card" style="{{ $overdueCount > 0 ? 'border-color: #fca5a5; background: #fffcfc;' : '' }}">
+            <div class="stat-icon" style="background: #fee2e2; color: #b91c1c;"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            <div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Vencidos</div>
+                <div style="font-size: 1.5rem; font-weight: 800; color: {{ $overdueCount > 0 ? '#b91c1c' : 'inherit' }}">{{ $overdueCount }}</div>
+            </div>
+        </div>
     </div>
-    @endif
 
-    <div class="dashboard-card" style="background: white; border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow);">
-        <h1 style="margin-bottom: 1rem; color: var(--text-main);">Bienvenido al Panel de Control</h1>
-        <p style="color: var(--text-muted); line-height: 1.6;">
+
+    <div style="background: white; border-radius: var(--radius-lg); padding: 2.5rem; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+        <h2 style="margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem;">
+            <i class="fa-solid fa-bolt-lightning" style="color: #eab308;"></i> Acciones Rápidas
+        </h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
             @if(auth()->user()->role === 'admin')
-                Esta es la vista de <strong>Administrador/Bibliotecario</strong>. Aquí podrás gestionar los libros del catálogo, aprobar préstamos y administrar a los usuarios.
-                <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-                    <a href="{{ route('books.index') }}" class="btn-primary" style="text-decoration: none; display: inline-block; width: auto; text-align: center;">Gestionar Libros</a>
-                    <a href="{{ route('users.index') }}" class="btn-primary" style="text-decoration: none; display: inline-block; width: auto; background-color: var(--text-main); text-align: center;">Gestionar Usuarios</a>
-                    <a href="{{ route('loans.index') }}" class="btn-primary" style="text-decoration: none; display: inline-block; width: auto; background-color: var(--success-color); text-align: center;">Ver Préstamos</a>
-                    <a href="{{ route('reports.index') }}" class="btn-primary" style="text-decoration: none; display: inline-block; width: auto; background-color: #6B7280; text-align: center;">Reportes</a>
-                </div>
+                <a href="{{ route('books.index') }}" class="btn-premium btn-primary" style="gap: 0.6rem;">
+                    <i class="fa-solid fa-box-archive"></i> Gestionar Libros
+                </a>
+                <a href="{{ route('users.index') }}" class="btn-premium" style="background: #1e293b; color: white; gap: 0.6rem;">
+                    <i class="fa-solid fa-users-gear"></i> Usuarios
+                </a>
+                <a href="{{ route('loans.index') }}" class="btn-premium" style="background: #10b981; color: white; gap: 0.6rem;">
+                    <i class="fa-solid fa-file-invoice"></i> Préstamos
+                </a>
+                <a href="{{ route('reports.index') }}" class="btn-premium" style="background: #6366f1; color: white; gap: 0.6rem;">
+                    <i class="fa-solid fa-chart-pie"></i> Reportes
+                </a>
             @else
-                Esta es la vista de <strong>Estudiante</strong>. Aquí podrás consultar la disponibilidad de libros y verificar tus préstamos activos.
-                <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-                    <a href="{{ route('catalog.index') }}" class="btn-primary" style="text-decoration: none; display: inline-block; width: auto; text-align: center;">Consultar Catálogo</a>
-                    <a href="{{ route('loans.index') }}" class="btn-primary" style="text-decoration: none; display: inline-block; width: auto; background-color: var(--success-color); text-align: center;">Mis Préstamos</a>
-                </div>
+                <a href="{{ route('catalog.index') }}" class="btn-premium btn-primary" style="gap: 0.6rem;">
+                    <i class="fa-solid fa-layer-group"></i> Consultar Catálogo
+                </a>
+                <a href="{{ route('loans.index') }}" class="btn-premium" style="background: #10b981; color: white; gap: 0.6rem;">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Mis Préstamos
+                </a>
             @endif
-        </p>
+        </div>
     </div>
 </div>
+
 @endsection

@@ -3,17 +3,22 @@
 @section('title', 'Gestión de Usuarios - Biblioteca')
 
 @section('content')
-<div class="dashboard-header" style="background: white; padding: 1rem 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
-    <h2 style="color: var(--primary-color); font-weight: 700; margin: 0;">📚 Biblioteca Admin</h2>
-    <div style="display: flex; align-items: center; gap: 1rem;">
-        <a href="{{ route('dashboard') }}" style="color: var(--text-main); text-decoration: none; font-weight: 500;">Volver al Inicio</a>
+<nav class="navbar">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <i class="fa-solid fa-users-gear" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+        <h2 style="margin: 0; color: var(--primary-color);">Gestión <span style="color: var(--text-main); font-weight: 300;">de Usuarios</span></h2>
     </div>
-</div>
+    <a href="{{ route('dashboard') }}" class="btn-premium" style="background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-main); padding: 0.5rem 1rem; font-size: 0.85rem; gap: 0.5rem; box-shadow: var(--shadow-sm);">
+        <i class="fa-solid fa-house"></i> Volver al Inicio
+    </a>
+</nav>
 
-<div style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem; animation: fadeIn 0.4s ease-out;">
+<div class="container animate-fade">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h1 style="color: var(--text-main);">Gestión de Usuarios</h1>
-        <a href="{{ route('users.create') }}" class="btn-primary" style="text-decoration: none; width: auto; display: inline-block;">+ Añadir Usuario</a>
+        <h1 style="margin: 0;">Usuarios del Sistema</h1>
+        <a href="{{ route('users.create') }}" class="btn-premium btn-primary" style="gap: 0.5rem;">
+            <i class="fa-solid fa-user-plus"></i> Añadir Usuario
+        </a>
     </div>
 
     @if(session('success'))
@@ -54,13 +59,17 @@
                             <span style="background: #FEF3C7; color: #92400E; padding: 0.25rem 0.5rem; border-radius: 999px; font-size: 0.875rem; font-weight: 500;">Docente</span>
                         @endif
                     </td>
-                    <td style="padding: 1rem; display: flex; gap: 0.5rem;">
-                        <a href="{{ route('users.edit', $user) }}" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">Editar</a>
+                    <td style="padding: 1rem; display: flex; gap: 0.75rem;">
+                        <a href="{{ route('users.edit', $user) }}" style="color: var(--primary-color); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.3rem;">
+                            <i class="fa-solid fa-pen-to-square"></i> Editar
+                        </a>
                         @if(auth()->id() !== $user->id)
-                        <form action="{{ route('users.destroy', $user) }}" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');">
+                        <form action="{{ route('users.destroy', $user) }}" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');" style="margin: 0;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" style="color: var(--error-color); background: none; border: none; font-weight: 500; cursor: pointer;">Eliminar</button>
+                            <button type="submit" style="color: var(--error-color); background: none; border: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.3rem;">
+                                <i class="fa-solid fa-trash-can"></i> Eliminar
+                            </button>
                         </form>
                         @endif
                     </td>

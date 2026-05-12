@@ -1,0 +1,103 @@
+# Poner Online el Sistema de Biblioteca Laravel
+
+## Resumen del Proyecto
+
+Tu proyecto es un **sistema de gestión de biblioteca** hecho con:
+- **Laravel 12** (PHP 8.2+)
+- **SQLite** como base de datos
+- **Vite 7 + Tailwind CSS 4** para el frontend
+- Funcionalidades: catálogo, préstamos, usuarios, avisos, autenticación con panel de administración
+
+Actualmente corre en una máquina virtual en `192.168.1.62` y solo es accesible dentro de la red local.
+
+---
+
+## Opciones para Ponerlo Online
+
+### Opción A: 🚀 **ngrok** (Rápido, para demos y pruebas)
+
+**¿Qué es?** Un túnel que expone tu servidor local al internet con una URL pública.
+
+| Aspecto | Detalle |
+|---------|---------|
+| **Dificultad** | ⭐ Muy fácil |
+| **Tiempo** | ~5 minutos |
+| **Costo** | Gratis (URL temporal) / $8/mes (URL fija) |
+| **Persistencia** | La URL cambia cada vez que reinicias (gratis) |
+| **Ideal para** | Demos, pruebas, mostrar a compañeros |
+
+**Pasos:**
+1. Instalar ngrok en la VM
+2. Compilar assets con `npm run build`
+3. Iniciar Laravel con `php artisan serve --host=0.0.0.0`
+4. Ejecutar `ngrok http 8000`
+5. Obtienes una URL pública tipo `https://abc123.ngrok-free.app`
+
+---
+
+### Opción B: ☁️ **Railway** (Hosting en la nube, gratis)
+
+**¿Qué es?** Un servicio de hosting que despliega tu app desde GitHub automáticamente.
+
+| Aspecto | Detalle |
+|---------|---------|
+| **Dificultad** | ⭐⭐ Fácil |
+| **Tiempo** | ~15-20 minutos |
+| **Costo** | Gratis (plan trial $5 de crédito) |
+| **Persistencia** | URL permanente, siempre disponible |
+| **Ideal para** | Acceso permanente, proyectos académicos, presentaciones |
+
+**Pasos:**
+1. Subir el proyecto a GitHub (ya tienes experiencia con esto)
+2. Crear cuenta en Railway.app
+3. Conectar el repositorio de GitHub
+4. Configurar variables de entorno
+5. Railway hace el deploy automáticamente
+6. Obtienes una URL permanente tipo `biblioteca.up.railway.app`
+
+> [!IMPORTANT]
+> Railway necesita que cambiemos SQLite por **PostgreSQL** (que Railway provee gratis) ya que SQLite no funciona bien con deploys en la nube porque el sistema de archivos es efímero.
+
+---
+
+### Opción C: 🌐 **Exponer la VM directamente** (Port forwarding)
+
+**¿Qué es?** Configurar tu router para que el tráfico de internet llegue directamente a tu VM.
+
+| Aspecto | Detalle |
+|---------|---------|
+| **Dificultad** | ⭐⭐⭐ Intermedio |
+| **Tiempo** | ~30 minutos |
+| **Costo** | Gratis |
+| **Persistencia** | Mientras la VM esté encendida |
+| **Ideal para** | Acceso permanente sin servicios externos |
+
+**Pasos:**
+1. Configurar Laravel para escuchar en `0.0.0.0`
+2. Abrir el puerto en el firewall de la VM
+3. Configurar port forwarding en tu router
+4. Acceder con tu IP pública + puerto
+
+> [!WARNING]
+> Requiere acceso al router, y tu IP pública puede cambiar. Además, expones directamente tu máquina al internet, lo cual tiene implicaciones de seguridad.
+
+---
+
+## 🎯 Recomendación
+
+| ¿Qué necesitas? | Opción recomendada |
+|---|---|
+| Probar rápido / mostrar a alguien ahora | **Opción A (ngrok)** |
+| Que esté online permanentemente | **Opción B (Railway)** |
+| No depender de servicios externos | **Opción C (Port forwarding)** |
+
+## Decisión Requerida
+
+> [!IMPORTANT]
+> **¿Cuál opción prefieres?** Puedo ejecutar cualquiera de las tres. Si no estás seguro, te recomiendo empezar con **ngrok** (Opción A) porque es la más rápida y no requiere cambios en tu código. Si después quieres algo más permanente, podemos hacer Railway.
+
+## Preguntas Abiertas
+
+1. **¿Cuál opción prefieres?** (A, B, o C)
+2. **¿El proyecto ya está corriendo en la VM?** (¿ya hiciste `php artisan serve`?)
+3. **¿Tienes acceso directo a la terminal de la VM?** (SSH, consola, etc.)

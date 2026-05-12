@@ -97,24 +97,28 @@
 <div style="min-height: 100vh; background: linear-gradient(135deg, #EEF2FF 0%, #F0FDF4 100%); display: flex; flex-direction: column; align-items: center; padding: 2.5rem 1rem;">
 
     {{-- Header --}}
-    <div style="width: 100%; max-width: 560px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <a href="{{ route('catalog.index') }}" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.35rem;">
-            ← Volver al catálogo
+    <div style="width: 100%; max-width: 560px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <a href="{{ route('catalog.index') }}" class="btn-premium" style="background: white; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.5rem 1.25rem; font-size: 0.85rem; gap: 0.5rem; box-shadow: var(--shadow-sm); text-decoration: none;">
+            <i class="fa-solid fa-chevron-left"></i> Volver al Catálogo
         </a>
-        <span style="font-size: 0.8rem; color: var(--text-muted);">Biblioteca Universitaria</span>
+        <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.85rem; font-weight: 500;">
+            <i class="fa-solid fa-graduation-cap"></i> Biblioteca Universitaria
+        </div>
     </div>
 
     <div class="form-card">
         {{-- Título --}}
         <div style="text-align: center; margin-bottom: 2rem;">
-            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #6366F1, #8B5CF6); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 0.75rem;">📋</div>
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #6366F1, #8B5CF6); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; margin: 0 auto 0.75rem;">
+                <i class="fa-solid fa-clipboard-list"></i>
+            </div>
             <h1 style="font-size: 1.4rem; font-weight: 700; color: var(--text-main); margin: 0 0 0.3rem;">Solicitar Préstamo</h1>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Completa tus datos para reservar el libro</p>
         </div>
 
         {{-- Libro seleccionado --}}
         <div class="book-pill">
-            📚 {{ $book->title }} — {{ $book->author }}
+            <i class="fa-solid fa-book-bookmark"></i> {{ $book->title }} — {{ $book->author }}
         </div>
 
         {{-- Errores --}}
@@ -122,7 +126,7 @@
             <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 10px; padding: 0.9rem 1rem; margin-bottom: 1.25rem;">
                 <ul style="margin: 0; padding-left: 1.2rem; color: #DC2626; font-size: 0.875rem;">
                     @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
+                        <li><i class="fa-solid fa-circle-xmark" style="margin-right: 0.4rem;"></i>{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
@@ -133,7 +137,9 @@
 
             {{-- Nombre --}}
             <div class="form-group">
-                <label class="form-label" for="student_name">👤 Nombre completo</label>
+                <label class="form-label" for="student_name" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fa-solid fa-user" style="color: var(--primary-color);"></i> Nombre completo
+                </label>
                 <div class="input-icon-wrap">
                     <input type="text" id="student_name" name="student_name"
                            class="form-input" value="{{ old('student_name') }}"
@@ -145,7 +151,9 @@
 
             {{-- Número de identificación --}}
             <div class="form-group">
-                <label class="form-label" for="id_number">🪪 Número de identificación</label>
+                <label class="form-label" for="id_number" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fa-solid fa-id-card" style="color: var(--primary-color);"></i> Número de identificación
+                </label>
                 <input type="text" id="id_number" name="id_number"
                        class="form-input" value="{{ old('id_number') }}"
                        placeholder="Ej: 2024-00123"
@@ -155,7 +163,9 @@
 
             {{-- Teléfono --}}
             <div class="form-group">
-                <label class="form-label" for="phone">📲 Número de teléfono <span style="color:var(--text-muted);font-weight:400;">(para reporte de devolución)</span></label>
+                <label class="form-label" for="phone" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fa-solid fa-mobile-screen-button" style="color: var(--primary-color);"></i> Número de teléfono
+                </label>
                 <input type="tel" id="phone" name="phone"
                        class="form-input" value="{{ old('phone') }}"
                        placeholder="Ej: +504 9999-9999"
@@ -165,13 +175,17 @@
 
             {{-- Foto de carnet --}}
             <div class="form-group">
-                <label class="form-label">📷 Foto del carnet estudiantil</label>
+                <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fa-solid fa-camera" style="color: var(--primary-color);"></i> Foto del carnet estudiantil
+                </label>
                 <div class="upload-zone" id="uploadZone">
                     <input type="file" id="carnet_photo" name="carnet_photo"
                            accept="image/jpg,image/jpeg,image/png,image/webp"
                            onchange="previewCarnet(this)" required>
                     <div id="uploadPrompt">
-                        <div style="font-size: 2rem; margin-bottom: 0.4rem;">🪪</div>
+                        <div style="font-size: 1.5rem; color: #6366f1; margin-bottom: 0.6rem;">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
                         <p style="font-weight: 600; color: var(--primary-color); margin: 0 0 0.2rem;">Haz clic o arrastra tu foto aquí</p>
                         <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0;">JPG, PNG o WEBP · Máx. 4 MB</p>
                     </div>
@@ -183,12 +197,13 @@
             </div>
 
             {{-- Aviso --}}
-            <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: #92400E;">
-                ⏳ El préstamo tiene una duración de <strong>7 minutos</strong>. Acércate a la biblioteca para retirar el libro.
+            <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: #92400E; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fa-solid fa-hourglass-half"></i>
+                <span>El préstamo tiene una duración de <strong>7 minutos</strong>. Acércate a la biblioteca para retirar el libro.</span>
             </div>
 
-            <button type="submit" class="btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem; letter-spacing: 0.01em;">
-                ✅ Confirmar Solicitud
+            <button type="submit" class="btn-premium btn-primary" style="width: 100%; padding: 1rem; font-size: 1rem; letter-spacing: 0.01em; gap: 0.5rem; border: none;">
+                <i class="fa-solid fa-circle-check"></i> Confirmar Solicitud
             </button>
         </form>
     </div>

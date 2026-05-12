@@ -6,7 +6,7 @@
 <div class="auth-container">
     <div class="auth-card">
         <div class="auth-header">
-            <h1>📚 Biblioteca</h1>
+            <h1><i class="fa-solid fa-book-bookmark"></i> Biblioteca</h1>
             <p>Ingresa tus credenciales para continuar</p>
         </div>
 
@@ -26,9 +26,9 @@
                 <input id="password" type="password" class="form-control" name="password" required placeholder="••••••••">
             </div>
 
-            <div class="form-group mt-4">
-                <button type="submit" class="btn-primary">
-                    Iniciar Sesión
+            <div style="margin-top: 2.5rem;">
+                <button type="submit" class="btn-premium btn-primary" style="width: 100%;">
+                    Entrar al Sistema
                 </button>
             </div>
         </form>

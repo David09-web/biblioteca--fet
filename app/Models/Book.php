@@ -14,5 +14,11 @@ class Book extends Model
         'total_copies',
         'available_copies',
         'image_path',
+        'category_id',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
